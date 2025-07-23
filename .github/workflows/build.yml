@@ -7,6 +7,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/.buildozer/android/platform/android-sdk
+      ANDROID_NDK_HOME: ${{ github.workspace }}/.buildozer/android/platform/android-ndk-r25b
+      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+      PATH: ${{ github.workspace }}/.buildozer/android/platform/apache-ant-1.9.4/bin:$PATH
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,16 +33,24 @@ jobs:
           path: .buildozer
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
-      - name: Install dependencies
+      - name: Install dependencies and Java 11
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install --upgrade buildozer cython
+          sudo apt-get install -y openjdk-11-jdk git unzip zip zlib1g-dev libncurses5:i386 libstdc++6:i386 libffi-dev liblzma-dev
+          java -version
+          javac -version
+
+      - name: Install Python packages
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          pip3 install --upgrade cython buildozer
+
+      - name: Allow sdkmanager to run without GUI prompts
+        run: mkdir -p $HOME/.android && touch $HOME/.android/repositories.cfg
 
       - name: Build APK with Buildozer
         run: |
           yes | buildozer android debug
-          # El apk resultante estará en bin/
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
