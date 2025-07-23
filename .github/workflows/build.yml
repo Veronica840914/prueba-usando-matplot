@@ -1,4 +1,5 @@
-name: CI
+name: Build APK
+
 on:
   push:
     branches: [ main ]
@@ -33,19 +34,17 @@ jobs:
           path: .buildozer
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
-      - name: Install dependencies and Java 11
+      - name: Install system dependencies and Java 11
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-11-jdk git unzip zip zlib1g-dev libncurses5:i386 libstdc++6:i386 libffi-dev liblzma-dev
-          java -version
-          javac -version
 
-      - name: Install Python packages
+      - name: Install Python packages Buildozer and Cython
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
           pip3 install --upgrade cython buildozer
 
-      - name: Allow sdkmanager to run without GUI prompts
+      - name: Avoid sdkmanager GUI prompt error
         run: mkdir -p $HOME/.android && touch $HOME/.android/repositories.cfg
 
       - name: Build APK with Buildozer
@@ -55,5 +54,5 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: APK
+          name: MyGraphApp-APK
           path: bin/*.apk
