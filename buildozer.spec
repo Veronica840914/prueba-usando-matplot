@@ -1,36 +1,39 @@
 [app]
-# Nombre de tu app
+# Nombre y metadata de tu app
 title = MyGraphApp
-# Paquete, en formato reverso de dominio sin espacios
 package.name = mygraphapp
 package.domain = org.example
+# Versión debe estar obligatoriamente
+version = 0.1
 
-# Script principal
-source.include_exts = py,png,jpg,kv,atlas
+# Carpeta con tu código
+source.dir = .
+
+# Entrada principal (archivo Python)
 source.main = main.py
 
-# Versiones mínimas y arquitectura (ajusta según tu necesidad)
-android.minapi = 24
-android.archs = arm64-v8a,armeabi-v7a
+# Extensiones a incluir
+source.include_exts = py,png,jpg,kv,atlas
 
-# Requisitos principales
+# Requisitos de Python y librerías
 requirements = python3,kivy==2.1.0,matplotlib,numpy,pillow
 
-# Para usar matplotlib de Kivy Garden
+# Dependencias Kivy Garden
 garden_requirements = matplotlib
 
-# Rama estable de python-for-android (usar develop para mejor soporte matplotlib)
+# Config Android (básico y moderno)
+android.minapi = 24
+android.sdk = 33
+android.ndk = 25b
+android.archs = armeabi-v7a,arm64-v8a
+
+# Usa rama develop para mejores builds de matplotlib
 p4a.branch = develop
 
-# Nivel de logs (2 para mostrar mensajes relevantes)
+# Mostrar logs mínimos (opcional, para debugging)
 log_level = 2
 
-# Nombre del archivo apk
-android.release_artifact = apk
-
-# Permisos si son necesarios (no estrictamente requerido para tu app, pero para referencia)
-# android.permissions = INTERNET
-
-# Ajustes opcionales para acelerar compilación (puedes quitar el .buildozer para rebuild limpio)
-# clean_build = True
+[buildozer]
+# Opcional: limpia antes de compilar para evitar problemas de caché
+clean_build = True
 
