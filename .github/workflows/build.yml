@@ -15,7 +15,10 @@ jobs:
       PATH: ${{ github.workspace }}/.buildozer/android/platform/apache-ant-1.9.4/bin:$PATH
 
     steps:
-      - name: Checkout repository
+      - name: Install git and tar
+        run: sudo apt-get update && sudo apt-get install -y git tar
+
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set date for cache key
@@ -34,10 +37,10 @@ jobs:
           path: .buildozer
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
-      - name: Install system dependencies and Java 11
+      - name: Install system dependencies & Java 11
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-11-jdk git unzip zip zlib1g-dev libncurses5:i386 libstdc++6:i386 libffi-dev liblzma-dev
+          sudo apt-get install -y openjdk-11-jdk unzip zip zlib1g-dev libncurses5:i386 libstdc++6:i386 libffi-dev liblzma-dev
 
       - name: Install Python packages Buildozer and Cython
         run: |
